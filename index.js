@@ -53,7 +53,6 @@ app.get("/game/:id", (req, res) =>{
 
 app.post("/game", (req, res) =>{
     var {title, year, price} = req.body;
-    console.log("Title: " + title);
     var id =Math.floor(Math.random() * (1000 - 1) + 1);
     DB.games.push({
         id,
@@ -62,6 +61,17 @@ app.post("/game", (req, res) =>{
         price
     });
     res.sendStatus(200);
+});
+
+app.delete("/game/:id", (req, res) =>{
+    var id = parseInt(req.params.id);
+    var index = DB.games.findIndex(g => g.id == id);
+    if(index == -1){
+        res.sendStatus(404);
+    } else {
+        DB.games.splice(index, 1);
+        res.sendStatus(200);
+    };
 });
 
 //#region ENDPOINTS
