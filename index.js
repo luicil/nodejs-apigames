@@ -35,6 +35,21 @@ app.get("/games", (req, res) =>{
     res.json(DB.games);
 });
 
+app.get("/game/:id", (req, res) =>{
+    if(isNaN(req.params.id)){
+        res.sendStatus(400);
+    } else {
+        var id = parseInt(req.params.id);
+        var game = DB.games.find(g => g.id == id);
+        if(game == undefined){
+            res.sendStatus(404)
+        } else {
+            res.statusCode = 200;
+            res.json(game);
+        };
+    };
+});
+
 app.listen(port,() =>{
     console.log("API iniciada com sucesso !");
 });
