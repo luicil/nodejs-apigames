@@ -74,6 +74,29 @@ app.delete("/game/:id", (req, res) =>{
     };
 });
 
+app.put("/game/:id", (req, res) =>{
+    var id = parseInt(req.params.id);
+    var game = DB.games.find(g => g.id == id);
+    if(game == undefined){
+        res.sendStatus(404);
+    } else {
+        var {title, year, price} = req.body;
+        if(title != undefined){
+            game.title = title;
+        };
+        if(year != undefined){
+            game.year = year;
+        };
+        if(price != undefined){
+            game.price = price;
+        };
+        res.sendStatus(200);
+
+    }
+
+
+});
+
 //#region ENDPOINTS
 
 app.listen(port,() =>{
