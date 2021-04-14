@@ -29,7 +29,8 @@ var DB ={
     ]
 };
 
-//ENDPOINT DA API
+//#region ENDPOINTS
+
 app.get("/games", (req, res) =>{
     res.statusCode = 200;
     res.json(DB.games);
@@ -49,6 +50,21 @@ app.get("/game/:id", (req, res) =>{
         };
     };
 });
+
+app.post("/game", (req, res) =>{
+    var {title, year, price} = req.body;
+    console.log("Title: " + title);
+    var id =Math.floor(Math.random() * (1000 - 1) + 1);
+    DB.games.push({
+        id,
+        title,
+        year,
+        price
+    });
+    res.sendStatus(200);
+});
+
+//#region ENDPOINTS
 
 app.listen(port,() =>{
     console.log("API iniciada com sucesso !");
