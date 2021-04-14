@@ -29,8 +29,10 @@ var DB ={
     ]
 };
 
-app.get("/", (req, res) =>{
-
+//ENDPOINT DA API
+app.get("/games", (req, res) =>{
+    res.statusCode = 200;
+    res.json(DB.games);
 });
 
 app.listen(port,() =>{
