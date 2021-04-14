@@ -1,0 +1,14 @@
+{
+  "name": "apigames",
+  "version": "1.0.0",
+  "description": "API DE GAMES",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Luicil Fernandes",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
