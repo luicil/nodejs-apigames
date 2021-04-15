@@ -46,6 +46,10 @@
             games.forEach(game =>{
                 var linha = document.createElement("li");
                 linha.innerHTML= game.title;
+                linha.setAttribute("data-id", game.id);
+                linha.setAttribute("data-title", game.title);
+                linha.setAttribute("data-year", game.year);
+                linha.setAttribute("data-price", game.price);
                 lista.appendChild(linha);
 
             });
