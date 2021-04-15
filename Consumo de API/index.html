@@ -17,45 +17,65 @@
     <input type="number" name="year" id = "year" placeholder="Ano">
     <input type="number" name ="price" id ="price" placeholder="Preço">
     <button type="button" onclick="createGame();">Criar</button>
-    <script>
+</body>
+<script>
 
-        function createGame(){
-            var titleInput = document.getElementById("title");
-            var yearInput = document.getElementById("year");
-            var priceInput = document.getElementById("price");
-            var newGame ={
-                title: titleInput.value,
-                year: yearInput.value,
-                price: priceInput.value
-            }
-            axios.post("http://localhost/game", newGame).then((response) =>{
-                if(response.status == 200){
-                    location.reload();
-                } else {
-                    alert(response.status);
-                }
-            }).catch((error) =>{
-                console.log(error);
-            });
-
+    function createGame(){
+        var titleInput = document.getElementById("title");
+        var yearInput = document.getElementById("year");
+        var priceInput = document.getElementById("price");
+        var newGame ={
+            title: titleInput.value,
+            year: yearInput.value,
+            price: priceInput.value
         }
-
-        axios.get("http://localhost/games").then((response) =>{
-            var games = response.data;
-            lista = document.getElementById("games");
-            games.forEach(game =>{
-                var linha = document.createElement("li");
-                linha.innerHTML= game.title;
-                linha.setAttribute("data-id", game.id);
-                linha.setAttribute("data-title", game.title);
-                linha.setAttribute("data-year", game.year);
-                linha.setAttribute("data-price", game.price);
-                lista.appendChild(linha);
-
-            });
+        axios.post("http://localhost/game", newGame).then((response) =>{
+            if(response.status == 200){
+                location.reload();
+            } else {
+                alert(response.status);
+            }
         }).catch((error) =>{
             console.log(error);
         });
-    </script>
-</body>
+    };
+
+    function deleteGame(listItem){
+        var id = listItem.getAttribute("data-id");
+        axios.delete("http://localhost/game/" + id).then((response) =>{
+            if(response.status == 200){
+                location.reload();
+            }
+        }).catch((error) =>{
+            alert(error);
+        })
+    };
+
+    axios.get("http://localhost/games").then((response) =>{
+        var games = response.data;
+        lista = document.getElementById("games");
+        games.forEach(game =>{
+            var linha = document.createElement("li");
+            
+            linha.setAttribute("data-id", game.id);
+            linha.setAttribute("data-title", game.title);
+            linha.setAttribute("data-year", game.year);
+            linha.setAttribute("data-price", game.price);
+            linha.innerHTML= game.title;
+
+            var delBtn = document.createElement("button");
+            delBtn.innerHTML = "Excluir";
+            delBtn.addEventListener("click", function(){ deleteGame(linha)});
+
+            linha.appendChild(delBtn);
+
+            lista.appendChild(linha);
+
+        });
+    }).catch((error) =>{
+        console.log(error);
+    });
+
+</script>
+
 </html>
