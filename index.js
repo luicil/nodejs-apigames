@@ -2,7 +2,8 @@ const express = require("express");
 const app = express();
 const port = 80;
 const cors = require("cors");
-
+const jwt = require("jsonwebtoken");
+const jwtSecret ="Ramissa Rabuja";
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cors());
@@ -27,6 +28,20 @@ var DB ={
             title: "Sea of Thieves",
             year: 2019,
             price: 100
+        }
+    ],
+    users: [
+        {
+            id: 1,
+            nome: "luicil",
+            email: "luicil@luicil.com.br",
+            senha: "1234"
+        },
+        {
+            id: 2,
+            nome: "fulano",
+            email: "fulano@fulano.com.br",
+            senha: 4321
         }
     ]
 };
@@ -95,8 +110,30 @@ app.put("/game/:id", (req, res) =>{
         res.sendStatus(200);
 
     }
+});
 
+app.post("/auth", (req, res) =>{
+    var {email, senha} = req.body;
+    var user = DB.users.find(u => u.email == email);
+    if(user == undefined){
+        res.status(404);
+    } else {
+        if(user.senha == senha){
+            jwt.sign({id: user.id, email: user.email}, jwtSecret, {expiresIn: "1h"},(err, token) =>{
+                if(err){
+                    res.status(401);
+                    res.json({err: err});
 
+                } else {
+                    res.status(200);
+                    res.json({token: token});        
+                };                
+            });            
+        } else {
+            res.status(401);
+            res.json({err: "Não autorizado"});
+        }
+    }
 });
 
 //#region ENDPOINTS
