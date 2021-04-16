@@ -48,7 +48,7 @@ var DB ={
 
 //#region ENDPOINTS
 
-app.get("/games", (req, res) =>{
+app.get("/games", auth, (req, res) =>{
     res.statusCode = 200;
     res.json(DB.games);
 });
@@ -141,3 +141,30 @@ app.post("/auth", (req, res) =>{
 app.listen(port,() =>{
     console.log("API iniciada com sucesso !");
 });
+
+function auth(req, res, next){
+    var token = req.headers["authorization"];
+    console.log(token);
+    if(token != undefined){
+        const bearer = token.split(" ");
+        token = bearer[1];
+        jwt.verify(token, jwtSecret, (err, data) =>{
+            if(err){
+                res.status(401);
+                res.json({err: "Não autorizado"});        
+            } else {
+                console.log(data);
+                req.token = token;
+                req.loggedUser = {id: data.id, email: data.email}
+                next();
+            };
+        });
+
+    } else {
+        res.status(401);
+        res.json({err: "Não autorizado"});
+    }
+
+
+ 
+};
