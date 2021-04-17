@@ -10,6 +10,16 @@
 <body>
     <hr>
     <h4>Lista de Games</h4>
+    <hr>
+    <h2>Login</h2>
+    <input type="text" nome="email" id="email" placeholder="email@email.com.br">
+    <br>
+    <input type="password" nome="senha" id="senha" placeholder="***">
+    <br>
+    <button onclick="login();">Entrar</button>
+    <hr>
+
+
     <ul id="games"></ul>
     <hr>
     <h4>Novo Game</h4>
@@ -27,6 +37,26 @@
 
 </body>
 <script>
+
+    function login(){
+        
+        var email = document.getElementById("email").value;
+        var senha = document.getElementById("senha").value;
+        axios.post("http://localhost/auth", {email, senha}).then((response) =>{
+            var token = response.data.token;
+            localStorage.setItem("token", response.data.token);
+            location.reload();
+        }).catch((error) =>{
+            alert("Acesso negado");
+        });
+
+    };
+
+    var axiosConfig = {
+        headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+        }
+    };
 
     function loadForm(listItem){
         document.getElementById("IDEdit").value = listItem.getAttribute("data-id");
@@ -88,7 +118,7 @@
         })
     };
 
-    axios.get("http://localhost/games").then((response) =>{
+    axios.get("http://localhost/games", axiosConfig).then((response) =>{
         var games = response.data;
         lista = document.getElementById("games");
         games.forEach(game =>{
